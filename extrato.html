@@ -39,30 +39,36 @@
 
     <main class="main">
       <header class="header">
+        <div style="display:flex;align-items:center">
+          <button id="menuToggle" class="hamburger no-print" aria-label="Abrir menu" title="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
         <div>
-          <h1>Extrato</h1>
-          <p class="subtitle">Lista detalhada de todas as movimentações</p>
+           <h1>Extrato</h1>
+           <p class="subtitle">Lista detalhada de todas as movimentações</p>
+         </div>
         </div>
         <div class="header-actions">
-          <!-- Export toolbar destacado -->
-          <div class="export-toolbar no-print" role="group" aria-label="Exportar e imprimir">
-            <button id="exportCsv" class="export-btn csv" title="Exportar CSV">
-              <span data-feather="download"></span>
-              <span class="label">Exportar CSV</span>
-            </button>
+           <div class="export-toolbar no-print" role="group" aria-label="Exportar e imprimir">
+             <button id="exportCsv" class="export-btn csv" title="Exportar CSV">
+               <span data-feather="download"></span>
+               <span class="label">Exportar CSV</span>
+             </button>
 
-            <button id="exportPdf" class="export-btn pdf" title="Exportar PDF">
-              <span data-feather="file-text"></span>
-              <span class="label">Exportar PDF</span>
-            </button>
+             <button id="exportPdf" class="export-btn pdf" title="Exportar PDF">
+               <span data-feather="file-text"></span>
+               <span class="label">Exportar PDF</span>
+             </button>
 
-            <button id="printBtn" class="export-btn print" title="Imprimir extrato">
-              <span data-feather="printer"></span>
-              <span class="label">Imprimir</span>
-            </button>
-          </div>
-        </div>
-      </header>
+             <button id="printBtn" class="export-btn print" title="Imprimir extrato">
+               <span data-feather="printer"></span>
+               <span class="label">Imprimir</span>
+             </button>
+           </div>
+         </div>
+       </header>
++      <!-- overlay mobile (inserido globalmente para controlar drawer) -->
++      <div id="mobileOverlay" class="mobile-overlay" aria-hidden="true"></div>
 
       <div class="card">
         <!-- cabeçalho de impressão / comprovante -->
@@ -142,6 +148,7 @@
   <script src="https://unpkg.com/feather-icons"></script>
   <script src="assets/js/data.js"></script>
   <script src="assets/js/extrato.js"></script>
+  <script src="assets/js/ui.js"></script>
   <script>feather.replace()</script>
-</body>
-</html>
+ </body>
+ </html>
