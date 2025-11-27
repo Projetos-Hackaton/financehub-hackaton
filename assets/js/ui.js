@@ -9,6 +9,9 @@
   const sidebar = document.querySelector('.sidebar');
   const overlay = document.getElementById('mobileOverlay');
 
+  // somente inicializa o comportamento de drawer em telas mobile
+  function isMobileView(){ return window.innerWidth <= 1100; }
+
   function openDrawer(){
     if (!sidebar) return;
     sidebar.classList.add('open');
@@ -26,8 +29,17 @@
     menuBtn && menuBtn.setAttribute('aria-expanded','false');
   }
 
-  // toggle
-  if (menuBtn){
+  // toggle — só anexa listener se estivermos em mobile
+  function attachToggle(){
+    if (!menuBtn) return;
+    // remove listeners previous (defensive)
+    menuBtn.onclick = null;
+    if (!isMobileView()){
+      // garantir estado desktop
+      closeDrawer();
+      menuBtn.setAttribute('aria-expanded','false');
+      return;
+    }
     menuBtn.addEventListener('click', (e)=>{
       e.stopPropagation();
       if (!sidebar) return;
@@ -36,7 +48,9 @@
     });
   }
 
-  // overlay click closes drawer
+  attachToggle();
+
+  // overlay click fecha drawer
   if (overlay){
     overlay.addEventListener('click', closeDrawer);
   }
@@ -46,19 +60,22 @@
     if (e.key === 'Escape') closeDrawer();
   });
 
-  // close drawer when clicking a nav link (mobile)
+  // fechar drawer ao clicar em link do menu (mobile)
   document.addEventListener('click', (e)=>{
     const target = e.target;
     if (!sidebar) return;
-    if (target.closest('.nav') && window.innerWidth <= 1100) {
+    if (isMobileView() && target.closest('.nav')) {
       closeDrawer();
     }
   });
 
-  // ensure proper initial state on resize
+  // ajustar comportamento ao redimensionar
   window.addEventListener('resize', ()=>{
+    // reataiva/descativa o listener do botão conforme viewport
+    attachToggle();
+
     if (window.innerWidth > 1100){
-      // keep sidebar visible in desktop layout
+      // garantir layout desktop consistente
       sidebar && sidebar.classList.remove('open');
       document.body.classList.remove('drawer-open');
       overlay && overlay.classList.remove('show');
