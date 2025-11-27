@@ -1,20 +1,39 @@
 /*
   ui.js
-  - torna o menu responsivo em mobile (drawer)
-  - controla overlay e teclas (Esc)
-  - evita múltiplos listeners ao redimensionar
+  - remove o menu adicional para usuários de PC (desktop)
+  - mantém o drawer apenas em mobile (<=1100px)
+  - evita múltiplos listeners e trata resize
 */
 (function(){
   function $(sel){ return document.querySelector(sel); }
-  const menuBtn = $('#menuToggle');
   const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('mobileOverlay');
   const nav = document.querySelector('.nav');
 
+  let menuBtn = null;
+  let overlay = null;
   let isDrawerOpen = false;
   let attached = false;
 
   function isMobileView(){ return window.innerWidth <= 1100; }
+
+  function createRefs(){
+    menuBtn = document.getElementById('menuToggle');
+    overlay = document.getElementById('mobileOverlay');
+  }
+
+  function removeMobileControlsFromDOM(){
+    // remove elementos que só devem existir em mobile
+    const mb = document.getElementById('menuToggle');
+    const ov = document.getElementById('mobileOverlay');
+    if (mb) mb.remove();
+    if (ov) ov.remove();
+    // garantir estado desktop
+    if (sidebar) {
+      sidebar.classList.remove('open');
+      sidebar.removeAttribute('aria-hidden');
+    }
+    document.body.classList.remove('drawer-open');
+  }
 
   function openDrawer(){
     if (!sidebar) return;
@@ -40,8 +59,8 @@
     else openDrawer();
   }
 
-  // attach or detach the toggle handler depending on current viewport
-  function updateToggleAttachment(){
+  function attachToggle(){
+    createRefs();
     if (!menuBtn) return;
     if (isMobileView() && !attached){
       menuBtn.addEventListener('click', toggleDrawer);
@@ -49,13 +68,14 @@
     } else if (!isMobileView() && attached){
       menuBtn.removeEventListener('click', toggleDrawer);
       attached = false;
-      // ensure closed in desktop
       closeDrawer();
     }
   }
 
-  // overlay click closes drawer
-  if (overlay){
+  // overlay click closes drawer (attach only if overlay exists)
+  function attachOverlayHandler(){
+    createRefs();
+    if (!overlay) return;
     overlay.addEventListener('click', closeDrawer);
   }
 
@@ -68,28 +88,43 @@
   if (nav){
     nav.addEventListener('click', (e)=>{
       if (isMobileView() && e.target.closest('.nav-item')) {
-        // small delay to allow navigation handling if any
         setTimeout(closeDrawer, 120);
       }
     });
   }
 
-  // initialize
-  updateToggleAttachment();
+  // inicialização após DOM pronto
+  document.addEventListener('DOMContentLoaded', ()=>{
+    createRefs();
 
-  // adjust on resize (debounce simple)
+    // se for desktop, remover controles mobile do DOM e sair (menu padrão do projeto permanece)
+    if (!isMobileView()){
+      removeMobileControlsFromDOM();
+      return;
+    }
+
+    // mobile: garantir handlers
+    attachToggle();
+    attachOverlayHandler();
+  });
+
+  // tratar mudanças de viewport (debounce simples)
   let rid = null;
   window.addEventListener('resize', ()=>{
     if (rid) clearTimeout(rid);
     rid = setTimeout(()=>{
-      updateToggleAttachment();
-      if (window.innerWidth > 1100){
-        // ensure drawer closed and overlay hidden on desktop
-        closeDrawer();
+      createRefs();
+      if (!isMobileView()){
+        // ao passar para desktop, remove controles mobile
+        removeMobileControlsFromDOM();
+      } else {
+        // ao voltar para mobile, re-attach se possível
+        attachToggle();
+        attachOverlayHandler();
       }
-    }, 120);
+    }, 140);
   });
 
-  // expose helpers for debugging if needed
+  // expose helpers (opcional para debug)
   window.UI_MENU = { open: openDrawer, close: closeDrawer, toggle: toggleDrawer, isOpen: () => isDrawerOpen };
 })();
