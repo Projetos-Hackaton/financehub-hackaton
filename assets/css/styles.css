@@ -132,9 +132,10 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe 
     /* garantir que o botão de menu (hamburger) só apareça em mobile */
     .hamburger{ display:none; } /* escondido por padrão (desktop) */
 
+    /* Mobile / drawer specific */
     @media (max-width:1100px){
-    /* mostrar hamburger apenas em telas pequenas */
-    .hamburger{
+      /* mostrar hamburger apenas em telas pequenas */
+      .hamburger{
         display:inline-flex;
         align-items:center;
         justify-content:center;
@@ -146,37 +147,38 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe 
         cursor:pointer;
         color:var(--muted);
         margin-right:8px;
-    }
+      }
 
-    /* transformar sidebar em drawer */
-    .sidebar{
+      /* transformar sidebar em drawer sem esconder no desktop */
+      .sidebar{
         position:fixed;
         left:-320px;
         top:0;
         height:100vh;
         width:260px;
         z-index:1201;
-        transition:left .28s ease;
+        transition:left .28s ease,transform .28s ease;
         box-shadow:0 20px 40px rgba(6,10,20,0.25);
-        display:flex !important;
         background:var(--sidebar-bg);
-    }
-    .sidebar.open{ left:0; }
+        will-change:left;
+      }
+      .sidebar.open{ left:0; }
 
-    /* overlay para mobile (visível apenas em mobile) */
-    .mobile-overlay{
+      /* overlay para mobile (visível apenas em mobile) */
+      .mobile-overlay{
         position:fixed;
         inset:0;
         background:rgba(6,10,20,0.36);
         z-index:1200;
         display:none;
-    }
-    .mobile-overlay.show{ display:block; }
+      }
+      .mobile-overlay.show{ display:block; }
 
-    /* quando drawer aberto, evitar scroll no body */
-    body.drawer-open{ overflow:hidden; }
+      /* quando drawer aberto, evitar scroll no body */
+      body.drawer-open{ overflow:hidden; }
 
-    /* ajustes responsivos adicionais... */
+      /* ajustes responsivos adicionais */
+      .main{ padding:18px; margin-left:0; }
     }
 }
 /* adicionado: estilos para extrato detalhado */

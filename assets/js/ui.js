@@ -2,14 +2,18 @@
   ui.js
   - torna o menu responsivo em mobile (drawer)
   - controla overlay e teclas (Esc)
+  - evita múltiplos listeners ao redimensionar
 */
 (function(){
   function $(sel){ return document.querySelector(sel); }
   const menuBtn = $('#menuToggle');
   const sidebar = document.querySelector('.sidebar');
   const overlay = document.getElementById('mobileOverlay');
+  const nav = document.querySelector('.nav');
 
-  // somente inicializa o comportamento de drawer em telas mobile
+  let isDrawerOpen = false;
+  let attached = false;
+
   function isMobileView(){ return window.innerWidth <= 1100; }
 
   function openDrawer(){
@@ -18,7 +22,8 @@
     document.body.classList.add('drawer-open');
     if (overlay) overlay.classList.add('show');
     sidebar.setAttribute('aria-hidden','false');
-    menuBtn && menuBtn.setAttribute('aria-expanded','true');
+    if (menuBtn) menuBtn.setAttribute('aria-expanded','true');
+    isDrawerOpen = true;
   }
   function closeDrawer(){
     if (!sidebar) return;
@@ -26,31 +31,30 @@
     document.body.classList.remove('drawer-open');
     if (overlay) overlay.classList.remove('show');
     sidebar.setAttribute('aria-hidden','true');
-    menuBtn && menuBtn.setAttribute('aria-expanded','false');
+    if (menuBtn) menuBtn.setAttribute('aria-expanded','false');
+    isDrawerOpen = false;
+  }
+  function toggleDrawer(e){
+    if (e) e.stopPropagation();
+    if (isDrawerOpen) closeDrawer();
+    else openDrawer();
   }
 
-  // toggle — só anexa listener se estivermos em mobile
-  function attachToggle(){
+  // attach or detach the toggle handler depending on current viewport
+  function updateToggleAttachment(){
     if (!menuBtn) return;
-    // remove listeners previous (defensive)
-    menuBtn.onclick = null;
-    if (!isMobileView()){
-      // garantir estado desktop
+    if (isMobileView() && !attached){
+      menuBtn.addEventListener('click', toggleDrawer);
+      attached = true;
+    } else if (!isMobileView() && attached){
+      menuBtn.removeEventListener('click', toggleDrawer);
+      attached = false;
+      // ensure closed in desktop
       closeDrawer();
-      menuBtn.setAttribute('aria-expanded','false');
-      return;
     }
-    menuBtn.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      if (!sidebar) return;
-      if (sidebar.classList.contains('open')) closeDrawer();
-      else openDrawer();
-    });
   }
 
-  attachToggle();
-
-  // overlay click fecha drawer
+  // overlay click closes drawer
   if (overlay){
     overlay.addEventListener('click', closeDrawer);
   }
@@ -60,25 +64,32 @@
     if (e.key === 'Escape') closeDrawer();
   });
 
-  // fechar drawer ao clicar em link do menu (mobile)
-  document.addEventListener('click', (e)=>{
-    const target = e.target;
-    if (!sidebar) return;
-    if (isMobileView() && target.closest('.nav')) {
-      closeDrawer();
-    }
-  });
+  // close drawer when clicking an item in the nav (mobile only)
+  if (nav){
+    nav.addEventListener('click', (e)=>{
+      if (isMobileView() && e.target.closest('.nav-item')) {
+        // small delay to allow navigation handling if any
+        setTimeout(closeDrawer, 120);
+      }
+    });
+  }
 
-  // ajustar comportamento ao redimensionar
+  // initialize
+  updateToggleAttachment();
+
+  // adjust on resize (debounce simple)
+  let rid = null;
   window.addEventListener('resize', ()=>{
-    // reataiva/descativa o listener do botão conforme viewport
-    attachToggle();
-
-    if (window.innerWidth > 1100){
-      // garantir layout desktop consistente
-      sidebar && sidebar.classList.remove('open');
-      document.body.classList.remove('drawer-open');
-      overlay && overlay.classList.remove('show');
-    }
+    if (rid) clearTimeout(rid);
+    rid = setTimeout(()=>{
+      updateToggleAttachment();
+      if (window.innerWidth > 1100){
+        // ensure drawer closed and overlay hidden on desktop
+        closeDrawer();
+      }
+    }, 120);
   });
+
+  // expose helpers for debugging if needed
+  window.UI_MENU = { open: openDrawer, close: closeDrawer, toggle: toggleDrawer, isOpen: () => isDrawerOpen };
 })();
