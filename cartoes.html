@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cartões — FinanceHub</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">FH</div>
+        <div class="brand-text"><strong>FinanceHub</strong></div>
+      </div>
+      <nav class="nav">
+        <a class="nav-item" href="index.html"><span data-feather="bar-chart-2"></span> Dashboard</a>
+        <a class="nav-item" href="extrato.html"><span data-feather="file-text"></span> Extrato</a>
+        <a class="nav-item" href="index.html"><span data-feather="grid"></span> PIX</a>
+        <a class="nav-item active" href="cartoes.html"><span data-feather="credit-card"></span> Cartões</a>
+        <a class="nav-item" href="index.html"><span data-feather="shield"></span> Seguros</a>
+        <a class="nav-item" href="emprestimo.html"><span data-feather="dollar-sign"></span> Empréstimos</a>
+        <a class="nav-item" href="index.html"><span data-feather="gift"></span> Cashback</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <img class="avatar" src="https://i.pravatar.cc/40?img=47" alt="avatar">
+        <div class="user-info">
+          <div class="user-name" id="clientName">Maria Silva</div>
+          <div class="user-email">maria@email.com</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div style="display:flex;align-items:center">
+          <button id="menuToggle" class="hamburger no-print" aria-label="Abrir menu" title="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div>
+            <h1>Meus Cartões</h1>
+            <p class="subtitle">Gerenciar seus cartões virtuais e físicos</p>
+          </div>
+        </div>
+      </header>
+
+      <div id="mobileOverlay" class="mobile-overlay" aria-hidden="true"></div>
+
+      <!-- Seção Intro -->
+      <div class="card-intro">
+        <div class="intro-badge">💳 Cartões Disponíveis</div>
+        <p>Visualize seus cartões, acompanhe transações e gerencie limites com segurança.</p>
+        <button class="btn primary" style="margin-top:12px" onclick="openCreateCardModal()">
+          <span data-feather="plus" style="width:16px;height:16px;display:inline;margin-right:8px"></span>
+          Criar Novo Cartão
+        </button>
+      </div>
+
+      <!-- Grid Cartões -->
+      <div class="cards-section" id="cardsSection">
+        <!-- Cartões serão inseridos aqui dinamicamente -->
+      </div>
+
+      <!-- Modal Criar Cartão -->
+      <div id="createCardModal" class="modal" style="display:none">
+        <div class="modal-overlay" onclick="closeCreateCardModal()"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Criar Novo Cartão Virtual</h2>
+            <button class="btn-close-modal" onclick="closeCreateCardModal()">×</button>
+          </div>
+          <div class="modal-body">
+            <form id="createCardForm">
+              <div class="form-group">
+                <label for="cardType">Tipo de Cartão</label>
+                <select id="cardType" required style="padding:10px;border:1px solid #eef2f7;border-radius:8px;font-size:14px">
+                  <option value="credit">Crédito</option>
+                  <option value="debit">Débito</option>
+                  <option value="prepaid">Pré-pago</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="cardName">Nome do Cartão</label>
+                <input id="cardName" type="text" placeholder="Ex: Cartão de Viagem" required style="padding:10px;border:1px solid #eef2f7;border-radius:8px;font-size:14px;width:100%">
+              </div>
+              <div class="form-group">
+                <label for="cardColor">Cor do Cartão</label>
+                <div class="color-picker">
+                  <input type="radio" name="color" value="purple" checked> Purple
+                  <input type="radio" name="color" value="green"> Green
+                  <input type="radio" name="color" value="blue"> Blue
+                  <input type="radio" name="color" value="red"> Red
+                  <input type="radio" name="color" value="orange"> Orange
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="cardLimit">Limite (R$)</label>
+                <input id="cardLimit" type="number" value="5000" min="500" step="100" style="padding:10px;border:1px solid #eef2f7;border-radius:8px;font-size:14px;width:100%">
+              </div>
+              <button type="submit" class="btn primary" style="width:100%;margin-top:16px">Criar Cartão</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transações Recentes -->
+      <div class="card" style="margin-top:24px">
+        <h2 style="margin-top:0">Últimas Transações</h2>
+        <div class="transactions-list">
+          <div class="tx-item-card">
+            <div class="tx-icon" style="background:#ffe6e6">
+              <span data-feather="shopping-cart" style="width:18px;height:18px;color:var(--red)"></span>
+            </div>
+            <div class="tx-details">
+              <strong>Amazon Brasil</strong>
+              <small>Compra no débito • 14 Nov</small>
+            </div>
+            <div class="tx-amount red">-R$ 189,90</div>
+          </div>
+
+          <div class="tx-item-card">
+            <div class="tx-icon" style="background:#e6f0ff">
+              <span data-feather="coffee" style="width:18px;height:18px;color:var(--accent)"></span>
+            </div>
+            <div class="tx-details">
+              <strong>Starbucks Coffee</strong>
+              <small>Compra no crédito • 13 Nov</small>
+            </div>
+            <div class="tx-amount red">-R$ 45,50</div>
+          </div>
+
+          <div class="tx-item-card">
+            <div class="tx-icon" style="background:#e6ffe6">
+              <span data-feather="arrow-down" style="width:18px;height:18px;color:var(--green)"></span>
+            </div>
+            <div class="tx-details">
+              <strong>Depósito Recebido</strong>
+              <small>Transferência • 12 Nov</small>
+            </div>
+            <div class="tx-amount green">+R$ 2.500,00</div>
+          </div>
+
+          <div class="tx-item-card">
+            <div class="tx-icon" style="background:#fff0e6">
+              <span data-feather="gas" style="width:18px;height:18px;color:#ff9500"></span>
+            </div>
+            <div class="tx-details">
+              <strong>Posto Shell</strong>
+              <small>Combustível • 10 Nov</small>
+            </div>
+            <div class="tx-amount red">-R$ 156,80</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estatísticas -->
+      <div class="stats-grid">
+        <div class="card stat-card">
+          <div class="stat-header">
+            <h3>Gastos Este Mês</h3>
+            <span data-feather="trending-down" style="width:20px;height:20px;color:var(--red)"></span>
+          </div>
+          <div class="stat-value">R$ 1.245,30</div>
+          <small>+12% comparado ao mês anterior</small>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-header">
+            <h3>Limite Utilizado</h3>
+            <span data-feather="pie-chart" style="width:20px;height:20px;color:var(--accent)"></span>
+          </div>
+          <div class="stat-value">15%</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:15%"></div>
+          </div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-header">
+            <h3>Próximo Vencimento</h3>
+            <span data-feather="calendar" style="width:20px;height:20px;color:var(--green)"></span>
+          </div>
+          <div class="stat-value">05 de Dezembro</div>
+          <small>Fatura de R$ 1.245,30</small>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/cartoes.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script>feather.replace()</script>
+</body>
+</html>
