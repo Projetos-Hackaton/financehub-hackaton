@@ -3,18 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FinanceHub — Dashboard</title>
+  <title>Dashboard — FinanceHub</title>
 
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Styles -->
   <link rel="stylesheet" href="assets/css/styles.css">
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Feather icons -->
-  <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body>
   <div class="app">
@@ -29,115 +21,109 @@
       <nav class="nav">
         <a class="nav-item active" href="index.html"><span data-feather="bar-chart-2"></span> Dashboard</a>
         <a class="nav-item" href="extrato.html"><span data-feather="file-text"></span> Extrato</a>
-         <a class="nav-item"><span data-feather="grid"></span> PIX</a>
-         <a class="nav-item"><span data-feather="credit-card"></span> Cartões</a>
-         <a class="nav-item"><span data-feather="shield"></span> Seguros</a>
-         <a class="nav-item"><span data-feather="dollar-sign"></span> Empréstimos</a>
-         <a class="nav-item"><span data-feather="gift"></span> Cashback</a>
-       </nav>
+        <a class="nav-item" href="index.html"><span data-feather="grid"></span> PIX</a>
+        <a class="nav-item" href="index.html"><span data-feather="credit-card"></span> Cartões</a>
+        <a class="nav-item" href="index.html"><span data-feather="shield"></span> Seguros</a>
+        <a class="nav-item" href="emprestimo.html"><span data-feather="dollar-sign"></span> Empréstimos</a>
+        <a class="nav-item" href="index.html"><span data-feather="gift"></span> Cashback</a>
+      </nav>
 
       <div class="sidebar-bottom">
         <img class="avatar" src="https://i.pravatar.cc/40?img=47" alt="avatar">
         <div class="user-info">
           <div class="user-name">Maria Silva</div>
-          <div class="user-email">maria@email.com</div>
+          <div class="user-email" id="userArea">maria@email.com</div>
         </div>
       </div>
     </aside>
 
-    <header class="header">
-      <div style="display:flex;align-items:center">
-        <button id="menuToggle" class="hamburger no-print" aria-label="Abrir menu" title="Menu">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <div>
-          <h1>Dashboard Financeiro</h1>
-          <p class="subtitle">Controle completo das suas finanças</p>
-        </div>
-      </div>
-      <div class="header-actions">
-        <button class="btn ghost">Exportar</button>
-      </div>
-    </header>
-
-    <!-- overlay para o drawer mobile -->
-    <div id="mobileOverlay" class="mobile-overlay" aria-hidden="true"></div>
-
     <main class="main">
-      <section class="grid-top">
+      <header class="header">
+        <div style="display:flex;align-items:center">
+          <button id="menuToggle" class="hamburger no-print" aria-label="Abrir menu" title="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div>
+            <h1>Dashboard Financeiro</h1>
+            <p class="subtitle">Controle completo das suas finanças</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn ghost">Exportar</button>
+        </div>
+      </header>
+
+      <!-- overlay mobile -->
+      <div id="mobileOverlay" class="mobile-overlay" aria-hidden="true"></div>
+
+      <!-- Grid top: cards principais -->
+      <div class="grid-top">
         <div class="card balance">
-          <div class="card-title">Saldo Total</div>
-          <div class="card-value">R$ 12.450,30</div>
-          <div class="card-note">+2.5% este mês</div>
+          <div class="card-title">Saldo</div>
+          <div class="card-value">R$ 0,00</div>
+          <div class="card-note green">+2.5% este mês</div>
         </div>
 
         <div class="card small">
           <div class="card-title">Receitas</div>
-          <div class="card-value">R$ 8.750,00</div>
-          <div class="card-note green">+5.2% este mês</div>
+          <div class="card-value">R$ 0,00</div>
+          <div class="card-note">Este mês</div>
         </div>
 
         <div class="card small">
           <div class="card-title">Despesas</div>
-          <div class="card-value">R$ 3.200,80</div>
-          <div class="card-note red">+1.8% este mês</div>
+          <div class="card-value">R$ 0,00</div>
+          <div class="card-note">Este mês</div>
         </div>
 
-        <div class="card chart-card">
-          <canvas id="pieChart" aria-label="Gastos por categoria"></canvas>
+        <div class="card">
+          <div class="card-title">Gastos por Categoria</div>
+          <div class="chart-card">
+            <canvas id="pieChart" width="200" height="200"></canvas>
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section class="grid-bottom">
+      <!-- Grid bottom: transações + cashback -->
+      <div class="grid-bottom">
         <div class="card transactions-card">
           <div class="card-header">
-            <h3>Extrato Inteligente</h3>
-            <a class="link">Ver todos</a>
+            <h3 style="margin:0">Transações Recentes</h3>
+            <a href="extrato.html" style="color:var(--accent);text-decoration:none;font-size:13px">Ver tudo →</a>
           </div>
-          <ul id="txList" class="tx-list">
-            <!-- preenchido por JS -->
+          <ul class="tx-list" id="txList">
+            <!-- será preenchido por JS -->
           </ul>
         </div>
 
         <div class="card cashback-card">
           <div class="cb-header">
-            <h3>Cashback Disponível</h3>
-            <span class="badge green">Ativo</span>
+            <h3 style="margin:0">Cashback</h3>
+            <span class="badge">Ativo</span>
           </div>
-          <div class="cb-amount">R$ 127,50</div>
-          <div class="cb-sub">Disponível para resgate</div>
+          <div class="cb-amount" id="cbAmount">R$ 0,00</div>
+          <div class="cb-sub">Acumulado neste mês</div>
           <div class="cb-break">
-            <div>Este mês <span class="muted">R$ 45,20</span></div>
-            <div>Parceiros <span class="muted">R$ 82,30</span></div>
-          </div>
-          <button class="btn primary">Resgatar Cashback</button>
-        </div>
-      </section>
-
-      <section class="insights">
-        <div class="card insight"> 
-          <h4>Insights Personalizados</h4>
-          <div class="insight-items">
-            <div class="insight-item blue">
-              <strong>Dica de Economia</strong>
-              <p>Você gastou 15% a mais em alimentação este mês. Considere usar cupons de desconto.</p>
+            <div>
+              Este mês
+              <div class="muted" id="cbThisMonth">R$ 0,00</div>
             </div>
-
-            <div class="insight-item green">
-              <strong>Meta Atingida</strong>
-              <p>Parabéns! Você economizou R$ 200 este mês conforme sua meta estabelecida.</p>
-            </div>
-
-            <div class="insight-item purple">
-              <strong>Oportunidade</strong>
-              <p>Considere investir em CDB que está rendendo 13,2% ao ano.</p>
+            <div>
+              Parceiros
+              <div class="muted" id="cbPartners">R$ 0,00</div>
             </div>
           </div>
+          <button class="btn primary">Resgatar</button>
         </div>
-      </section>
+      </div>
     </main>
   </div>
 
+  <!-- overlay mobile -->
+  <div id="mobileOverlay" class="mobile-overlay" aria-hidden="true"></div>
+
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
   <script src="assets/js/data.js"></script>
   <script src="assets/js/scripts.js"></script>
   <script src="assets/js/ui.js"></script>

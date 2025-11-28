@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Empréstimos — FinanceHub</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">FH</div>
+        <div class="brand-text"><strong>FinanceHub</strong></div>
+      </div>
+      <nav class="nav">
+        <a class="nav-item" href="index.html"><span data-feather="bar-chart-2"></span> Dashboard</a>
+        <a class="nav-item" href="extrato.html"><span data-feather="file-text"></span> Extrato</a>
+        <a class="nav-item" href="index.html"><span data-feather="grid"></span> PIX</a>
+        <a class="nav-item" href="index.html"><span data-feather="credit-card"></span> Cartões</a>
+        <a class="nav-item" href="index.html"><span data-feather="shield"></span> Seguros</a>
+        <a class="nav-item active" href="emprestimo.html"><span data-feather="dollar-sign"></span> Empréstimos</a>
+        <a class="nav-item" href="index.html"><span data-feather="gift"></span> Cashback</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <img class="avatar" src="https://i.pravatar.cc/40?img=47" alt="avatar">
+        <div class="user-info">
+          <div class="user-name">Maria Silva</div>
+          <div class="user-email">maria@email.com</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div style="display:flex;align-items:center">
+          <button id="menuToggle" class="hamburger no-print" aria-label="Abrir menu" title="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div>
+            <h1>Simulador de Empréstimos</h1>
+            <p class="subtitle">Encontre a melhor condição de financiamento</p>
+          </div>
+        </div>
+      </header>
+
+      <div id="mobileOverlay" class="mobile-overlay" aria-hidden="true"></div>
+
+      <!-- Seção intro -->
+      <div class="loan-intro">
+        <div class="intro-badge">💰 Simulador Inteligente</div>
+        <p>Calcule diferentes cenários de empréstimo em tempo real. Compare taxas, prazos e parcelas com precisão.</p>
+      </div>
+
+      <!-- Grid principal: Simulador + Resultado -->
+      <div class="loan-grid">
+        <!-- Painel Simulador -->
+        <div class="card loan-form-card">
+          <div class="card-header-loan">
+            <h2>Parâmetros de Simulação</h2>
+            <span class="badge-info">Preencha os campos</span>
+          </div>
+          
+          <form id="loanForm">
+            <div class="form-group">
+              <label for="loanAmount">Valor do Empréstimo</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">R$</span>
+                <input id="loanAmount" type="number" step="100" min="1000" max="1000000" value="10000" required>
+              </div>
+              <div class="slider-wrapper">
+                <input id="loanAmountSlider" type="range" min="1000" max="1000000" step="1000" value="10000">
+                <div class="slider-labels">
+                  <small>R$ 1.000</small>
+                  <small>R$ 1.000.000</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="loanRate">Taxa de Juros Anual</label>
+              <div class="input-wrapper">
+                <input id="loanRate" type="number" step="0.1" min="0.1" max="48" value="12.5" required>
+                <span class="input-suffix">% a.a.</span>
+              </div>
+              <div class="slider-wrapper">
+                <input id="loanRateSlider" type="range" min="0.1" max="48" step="0.1" value="12.5">
+                <div class="slider-labels">
+                  <small>0.1%</small>
+                  <small>48%</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="loanTerm">Prazo em Meses</label>
+              <div class="input-wrapper">
+                <input id="loanTerm" type="number" step="1" min="1" max="360" value="24" required>
+                <span class="input-suffix">meses</span>
+              </div>
+              <div class="slider-wrapper">
+                <input id="loanTermSlider" type="range" min="1" max="360" step="1" value="24">
+                <div class="slider-labels">
+                  <small>1 mês</small>
+                  <small>30 anos</small>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn primary btn-simulate" style="width:100%;margin-top:24px;font-size:16px">
+              <span data-feather="calculator" style="width:18px;height:18px;display:inline;margin-right:8px"></span>
+              Calcular Simulação
+            </button>
+          </form>
+        </div>
+
+        <!-- Painel Resultado -->
+        <div class="card loan-result-card">
+          <div id="resultSummary" style="display:none">
+            <div class="result-header">
+              <h3 style="margin:0">Resultado da Simulação</h3>
+              <span class="result-badge green">✓ Calculado</span>
+            </div>
+
+            <div class="result-grid">
+              <div class="result-box primary">
+                <div class="result-label">Parcela Mensal</div>
+                <div class="result-value" id="resMonthly">R$ 0,00</div>
+                <div class="result-hint">Valor que você pagará por mês</div>
+              </div>
+
+              <div class="result-box">
+                <div class="result-label">Total de Juros</div>
+                <div class="result-value red" id="resTotalInterest">R$ 0,00</div>
+                <div class="result-hint">Custo total de financiamento</div>
+              </div>
+
+              <div class="result-box">
+                <div class="result-label">Valor Financiado</div>
+                <div class="result-value" id="resAmount">R$ 0,00</div>
+                <div class="result-hint">Valor original solicitado</div>
+              </div>
+
+              <div class="result-box">
+                <div class="result-label">Total a Pagar</div>
+                <div class="result-value bold" id="resTotalAmount">R$ 0,00</div>
+                <div class="result-hint">Soma de todas as parcelas</div>
+              </div>
+            </div>
+
+            <div class="result-summary-line">
+              <strong>Prazo Total: <span id="resTerm">0 meses</span></strong>
+              <small style="color:var(--muted)">Duração do financiamento</small>
+            </div>
+
+            <button id="saveLoanBtn" class="btn primary" style="width:100%;margin-top:20px;font-size:15px">
+              <span data-feather="check-circle" style="width:18px;height:18px;display:inline;margin-right:8px"></span>
+              Solicitar Empréstimo
+            </button>
+          </div>
+
+          <div id="resultPlaceholder" style="color:var(--muted);text-align:center;padding:48px 24px">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.3;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 5v7m0 0l-3-3m3 3l3-3"/>
+            </svg>
+            <p><strong>Preencha os parâmetros</strong></p>
+            <p>Clique em "Calcular Simulação" para ver os resultados</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela de amortização -->
+      <div class="card loan-amortization" style="margin-top:24px">
+        <div class="card-header-loan">
+          <h2>Cronograma de Pagamentos</h2>
+          <small style="color:var(--muted)">Detalhamento mês a mês</small>
+        </div>
+        
+        <div id="amortizationTable" style="display:none;overflow-x:auto">
+          <table class="det-table amort-table">
+            <thead>
+              <tr>
+                <th style="text-align:center;width:70px">Mês</th>
+                <th style="text-align:right;width:130px">Juros</th>
+                <th style="text-align:right;width:130px">Principal</th>
+                <th style="text-align:right;width:150px">Saldo Devedor</th>
+              </tr>
+            </thead>
+            <tbody id="amortizationBody">
+            </tbody>
+          </table>
+        </div>
+
+        <div id="amortizationPlaceholder" style="color:var(--muted);text-align:center;padding:48px 24px">
+          <p>A tabela aparecerá após simular</p>
+        </div>
+      </div>
+
+      <!-- Comparador de cenários -->
+      <div class="card loan-comparator" style="margin-top:24px">
+        <h2 style="margin-top:0">Compare Diferentes Cenários</h2>
+        <div id="comparatorContent">
+          <div style="text-align:center;color:var(--muted);padding:32px">
+            Simule diferentes taxas e prazos para encontrar a melhor opção
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/emprestimo.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script>feather.replace()</script>
+</body>
+</html>
