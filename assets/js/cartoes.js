@@ -33,15 +33,34 @@ function generateExpiry() {
 
 // Abrir modal
 function openCreateCardModal() {
-  document.getElementById('createCardModal').style.display = 'flex';
+  const modal = document.getElementById('createCardModal');
+  modal.style.display = 'flex';
+  modal.classList.add('show');
   document.body.style.overflow = 'hidden';
+  
+  // Animar elementos dentro do modal
+  setTimeout(() => {
+    const formGroups = modal.querySelectorAll('.form-group');
+    formGroups.forEach((el, i) => {
+      el.style.animation = `slideInLeft 0.4s ease ${0.1 * i}s`;
+    });
+  }, 100);
 }
 
 // Fechar modal
 function closeCreateCardModal() {
-  document.getElementById('createCardModal').style.display = 'none';
-  document.body.style.overflow = 'auto';
-  document.getElementById('createCardForm').reset();
+  const modal = document.getElementById('createCardModal');
+  const content = modal.querySelector('.modal-content');
+  
+  content.classList.add('close');
+  
+  setTimeout(() => {
+    modal.classList.remove('show');
+    modal.style.display = 'none';
+    content.classList.remove('close');
+    document.body.style.overflow = 'auto';
+    document.getElementById('createCardForm').reset();
+  }, 300);
 }
 
 // Criar novo cartão
@@ -201,22 +220,10 @@ function showNotification(message) {
   const notification = document.createElement('div');
   notification.className = 'notification';
   notification.textContent = message;
-  notification.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: var(--green);
-    color: white;
-    padding: 14px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    z-index: 9999;
-    animation: slideIn 0.3s ease;
-  `;
   document.body.appendChild(notification);
   
   setTimeout(() => {
-    notification.style.animation = 'slideOut 0.3s ease';
+    notification.classList.add('out');
     setTimeout(() => notification.remove(), 300);
   }, 3000);
 }
